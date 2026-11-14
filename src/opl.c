@@ -1905,6 +1905,7 @@ static void miniInit(int mode)
             configGetInt(configOPL, CONFIG_OPL_PS2LOGO, &gPS2Logo);
             configGetStrCopy(configOPL, CONFIG_OPL_EXIT_PATH, gExitPath, sizeof(gExitPath));
             configGetInt(configOPL, CONFIG_OPL_HDD_SPINDOWN, &gHDDSpindown);
+            configGetInt(configOPL, CONFIG_OPL_AUTO_VMC, &gAutoVMC);
             if (mode == BDM_MODE) {
                 configGetStrCopy(configOPL, CONFIG_OPL_BDM_PREFIX, gBDMPrefix, sizeof(gBDMPrefix));
                 configGetInt(configOPL, CONFIG_OPL_BDM_CACHE, &bdmCacheSize);
@@ -1944,6 +1945,7 @@ static void autoLaunchHDDGame(char *argv[])
     snprintf(path, sizeof(path), "%sCFG/%s.cfg", gHDDPrefix, gAutoLaunchGame->startup);
     configSet = configAlloc(0, NULL, path);
     configRead(configSet);
+    guiGameAutoVMCHeadless(gHDDPrefix, gAutoLaunchGame->startup, configSet);
 
     hddLaunchGame(NULL, -1, configSet);
 }
@@ -2028,6 +2030,7 @@ static void autoLaunchBDMGame(char *argv[])
 
     configSet = configAlloc(0, NULL, path);
     configRead(configSet);
+    guiGameAutoVMCHeadless(gAutoLaunchDeviceData->bdmPrefix, gAutoLaunchBDMGame->startup, configSet);
 
     bdmLaunchGame(NULL, -1, configSet);
 }

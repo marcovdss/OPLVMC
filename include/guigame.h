@@ -28,6 +28,7 @@ void guiGameLoadConfig(item_list_t *support, config_set_t *configSet);
 int guiGameSaveConfig(config_set_t *configSet, item_list_t *support);
 void guiGameTestSettings(int id, item_list_t *support, config_set_t *configSet);
 int guiGameAutoVMC(item_list_t *support, int id, config_set_t *configSet);
+void guiGameAutoVMCHeadless(const char *prefix, const char *startup, config_set_t *configSet);
 
 void guiGameRemoveSettings(config_set_t *configSet);
 void guiGameRemoveGlobalSettings(config_set_t *configGame);
