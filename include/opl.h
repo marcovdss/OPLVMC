@@ -191,6 +191,10 @@ extern int gDefaultDevice;
 
 extern int gEnableWrite;
 
+// Automatically create and attach a per-game VMC (on the game's own device) for slot 1
+// when the game has none configured, so no physical memory card is needed.
+extern int gAutoVMC;
+
 // These prefixes are relative to the device's name (meaning that they do not include the device name).
 extern char gBDMPrefix[32];
 extern char gETHPrefix[32];

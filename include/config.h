@@ -89,6 +89,7 @@ enum CONFIG_INDEX {
 #define CONFIG_OPL_AUTO_REFRESH         "autorefresh"
 #define CONFIG_OPL_DEFAULT_DEVICE       "default_device"
 #define CONFIG_OPL_ENABLE_WRITE         "enable_delete_rename"
+#define CONFIG_OPL_AUTO_VMC             "auto_vmc"
 #define CONFIG_OPL_HDD_SPINDOWN         "hdd_spindown"
 #define CONFIG_OPL_BDM_PREFIX           "usb_prefix" // Leave this "usb" for compatibility
 #define CONFIG_OPL_ETH_PREFIX           "eth_prefix"

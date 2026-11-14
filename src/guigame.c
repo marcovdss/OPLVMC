@@ -333,6 +333,56 @@ void guiGameShowVMCMenu(int id, item_list_t *support)
     guiGameShowVMCConfig(id, support, vmc2, 1, 1);
 }
 
+// Automatic VMC: give a game its own VMC in slot 1 when none is configured, so the user
+// needs nothing but the USB drive (or HDD/SMB share) the game is on.
+// Returns 0 to continue the launch, -1 if the user chose to abort it.
+int guiGameAutoVMC(item_list_t *support, int id, config_set_t *configSet)
+{
+    char vmc[32], msg[128];
+    statusVMCparam_t status;
+    int size;
+
+    if (!gAutoVMC || support->itemCheckVMC == NULL || support->itemGetStartup == NULL)
+        return 0;
+
+    configGetVMC(configSet, vmc, sizeof(vmc), 0);
+    if (vmc[0] != '\0')
+        return 0; // The user picked a VMC (or "generic") for this game; respect it.
+
+    char *startup = support->itemGetStartup(support, id);
+    if (startup == NULL || startup[0] == '\0')
+        return 0;
+
+    // Same naming as the VMC dialog's default, so games in a series share one card.
+    snprintf(vmc, sizeof(vmc), "%s_%d", getGroupIdForTitleId(startup), 0);
+
+    size = support->itemCheckVMC(support, vmc, 0);
+    if (size == -1) { // Does not exist yet: create an 8 MB card, the size of a real one.
+        memset(&status, 0, sizeof(status));
+        support->itemCheckVMC(support, vmc, 8);
+        do {
+            if (fileXioDevctl("genvmc:", 0xC0DE0003, NULL, 0, (void *)&status, sizeof(status)) != 0) {
+                status.VMC_error = -1;
+                break;
+            }
+            snprintf(msg, sizeof(msg), _l(_STR_AUTO_VMC_CREATING), vmc, status.VMC_progress);
+            guiRenderTextScreen(msg);
+        } while (status.VMC_status != 0);
+
+        size = (status.VMC_error == 0) ? support->itemCheckVMC(support, vmc, 0) : 0;
+    }
+
+    if (size <= 0) {
+        LOG("GUI Auto VMC: %s unusable (size %d)\n", vmc, size);
+        snprintf(msg, sizeof(msg), _l(_STR_AUTO_VMC_FAILED), vmc);
+        return guiMsgBox(msg, 1, NULL) ? 0 : -1;
+    }
+
+    LOG("GUI Auto VMC: using %s (%d MB)\n", vmc, size);
+    configSetVMC(configSet, vmc, 0);
+    return 0;
+}
+
 // GSM
 static void guiGameSetGSMSettingsState(void)
 {
@@ -1185,7 +1235,8 @@ void guiGameRemoveSettings(config_set_t *configSet)
 void guiGameTestSettings(int id, item_list_t *support, config_set_t *configSet)
 {
     guiGameSaveConfig(configSet, support);
-    support->itemLaunch(support, id, configSet);
+    if (guiGameAutoVMC(support, id, configSet) == 0)
+        support->itemLaunch(support, id, configSet);
 }
 
 static void guiGameLoadGSMConfig(config_set_t *configSet, config_set_t *configGame)

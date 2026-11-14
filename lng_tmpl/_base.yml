@@ -703,3 +703,15 @@ gui_strings:
 - comment: Warning shown when saving a per-game parental lock while no parental lock password is set.
   label: PARENLOCK_GAME_NO_PASSWORD
   string: Set a parental lock password, or this game will not be locked.
+- comment: Label for the global setting that creates/attaches a per-game virtual memory card automatically.
+  label: AUTO_VMC
+  string: Automatic VMC
+- comment: Hint for the Automatic VMC setting.
+  label: HINT_AUTO_VMC
+  string: Games without a VMC get their own 8 MB VMC on their device. No memory card needed.
+- comment: Shown while the Automatic VMC is being created before a game starts. %s is the VMC name, %d the percentage.
+  label: AUTO_VMC_CREATING
+  string: 'Creating memory card %s... %d%%'
+- comment: Shown when the Automatic VMC could not be created or is invalid. %s is the VMC name.
+  label: AUTO_VMC_FAILED
+  string: 'Automatic VMC %s could not be used. Start the game without it?'

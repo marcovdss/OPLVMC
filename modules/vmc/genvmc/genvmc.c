@@ -615,10 +615,19 @@ static int vmc_create(createVMCparam_t *param)
     if (thid < 0)
         return -1;
 
+    // Report busy before the thread runs, so a caller polling GENVMC_DEVCTL_STATUS right
+    // after this devctl returns cannot mistake the previous idle state for completion.
+    genvmc_stats.VMC_status = GENVMC_STAT_BUSY;
+    genvmc_stats.VMC_error = 0;
+    genvmc_stats.VMC_progress = 0;
+
     // starting VMC create thread
     r = StartThread(thid, (void *)param);
-    if (r < 0)
+    if (r < 0) {
+        genvmc_stats.VMC_status = GENVMC_STAT_AVAIL;
+        genvmc_stats.VMC_error = -1;
         return -2;
+    }
 
     return 0;
 }

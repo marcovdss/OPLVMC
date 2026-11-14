@@ -524,6 +524,7 @@ void guiShowConfig()
     diaSetInt(diaConfig, CFG_HDDGAMELISTCACHE, gHDDGameListCache);
     diaSetString(diaConfig, CFG_EXITTO, gExitPath);
     diaSetInt(diaConfig, CFG_ENWRITEOP, gEnableWrite);
+    diaSetInt(diaConfig, CFG_AUTOVMC, gAutoVMC);
     diaSetInt(diaConfig, CFG_HDDSPINDOWN, gHDDSpindown);
     diaSetString(diaConfig, CFG_BDMPREFIX, gBDMPrefix);
     diaSetString(diaConfig, CFG_ETHPREFIX, gETHPrefix);
@@ -548,6 +549,7 @@ void guiShowConfig()
         diaGetInt(diaConfig, CFG_HDDGAMELISTCACHE, &gHDDGameListCache);
         diaGetString(diaConfig, CFG_EXITTO, gExitPath, sizeof(gExitPath));
         diaGetInt(diaConfig, CFG_ENWRITEOP, &gEnableWrite);
+        diaGetInt(diaConfig, CFG_AUTOVMC, &gAutoVMC);
         diaGetInt(diaConfig, CFG_HDDSPINDOWN, &gHDDSpindown);
         diaGetString(diaConfig, CFG_BDMPREFIX, gBDMPrefix, sizeof(gBDMPrefix));
         diaGetString(diaConfig, CFG_ETHPREFIX, gETHPrefix, sizeof(gETHPrefix));

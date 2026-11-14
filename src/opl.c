@@ -175,6 +175,7 @@ int gEnableDebug;
 int gPS2Logo;
 int gDefaultDevice;
 int gEnableWrite;
+int gAutoVMC;
 char gBDMPrefix[32];
 char gETHPrefix[32];
 int gRememberLastPlayed;
@@ -267,7 +268,7 @@ static void itemExecSelect(struct menu_item *curMenu)
         if (support->enabled) {
             if (curMenu->current) {
                 config_set_t *configSet = menuLoadConfig();
-                if (menuCheckGameParentalLock(configSet) == 0)
+                if (menuCheckGameParentalLock(configSet) == 0 && guiGameAutoVMC(support, curMenu->current->item.id, configSet) == 0)
                     support->itemLaunch(support, curMenu->current->item.id, configSet);
             }
         } else {
@@ -945,6 +946,7 @@ static void _loadConfig()
             configGetInt(configOPL, CONFIG_OPL_AUTO_REFRESH, &gAutoRefresh);
             configGetInt(configOPL, CONFIG_OPL_DEFAULT_DEVICE, &gDefaultDevice);
             configGetInt(configOPL, CONFIG_OPL_ENABLE_WRITE, &gEnableWrite);
+            configGetInt(configOPL, CONFIG_OPL_AUTO_VMC, &gAutoVMC);
             configGetInt(configOPL, CONFIG_OPL_HDD_SPINDOWN, &gHDDSpindown);
             configGetStrCopy(configOPL, CONFIG_OPL_BDM_PREFIX, gBDMPrefix, sizeof(gBDMPrefix));
             configGetStrCopy(configOPL, CONFIG_OPL_ETH_PREFIX, gETHPrefix, sizeof(gETHPrefix));
@@ -1112,6 +1114,7 @@ static void _saveConfig()
         configSetInt(configOPL, CONFIG_OPL_AUTO_REFRESH, gAutoRefresh);
         configSetInt(configOPL, CONFIG_OPL_DEFAULT_DEVICE, gDefaultDevice);
         configSetInt(configOPL, CONFIG_OPL_ENABLE_WRITE, gEnableWrite);
+        configSetInt(configOPL, CONFIG_OPL_AUTO_VMC, gAutoVMC);
         configSetInt(configOPL, CONFIG_OPL_HDD_SPINDOWN, gHDDSpindown);
         configSetStr(configOPL, CONFIG_OPL_BDM_PREFIX, gBDMPrefix);
         configSetStr(configOPL, CONFIG_OPL_ETH_PREFIX, gETHPrefix);
@@ -1743,6 +1746,7 @@ static void setDefaults(void)
     gPS2Logo = 0;
     gHDDGameListCache = 0;
     gEnableWrite = 0;
+    gAutoVMC = 1;
     gRememberLastPlayed = 0;
     gAutoStartLastPlayed = 9;
     gSelectButton = KEY_CIRCLE; // Default to Japan.
